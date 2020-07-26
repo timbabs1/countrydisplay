@@ -20,7 +20,6 @@ export default class App extends React.Component {
     }
     this.test = "go"
   }
-
   
   componentDidMount() {
     fetch("http://localhost:8080/https://restcountries.eu/rest/v2/all", {
