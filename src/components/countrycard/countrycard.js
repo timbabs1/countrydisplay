@@ -44,7 +44,7 @@ export default class CountryCard extends React.Component {
                         <p>Capital: {this.props.capital} </p>
                         <p>Currencies: {this.props.currencies} </p>
                         <p>Population Count: {this.props.populationCount} </p>
-                        <p>ISO Code: {this.props.isocode} </p>
+                        <p>ISO Code: {this.props.isoCode} </p>
                         <p>Languages: {this.props.languages} </p>
                         
                     </Modal>
