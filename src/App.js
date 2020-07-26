@@ -73,8 +73,8 @@ export default class App extends React.Component {
         {element !== null ? (
           
           <CountryCard 
-            title={"Click to get more details"} name={element.name} capital={element.capital} currencies={element.currencies.map(currency => <div>{currency.name}</div>)} 
-            populationCount={element.population} isoCode={element.alpha3Code} languages={element.languages.map(language => <div>{language.name}</div>)}  
+            title={"Click to get more details"} name={element.name} capital={element.capital} currencies={element.currencies.map(currency => <li>{currency.name}</li>)} 
+            populationCount={element.population} isoCode={element.alpha3Code} languages={element.languages.map(language => <li>{language.name}</li>)}  
             imgURL={`https://www.countryflags.io/${element.alpha2Code}/shiny/64.png`} />) : null}
          
           </Col>
@@ -96,6 +96,9 @@ export default class App extends React.Component {
   }
   makeApiCall = (searchInput) => {
     let searchUrl = `http://localhost:8080/https://restcountries.eu/rest/v2/name/${searchInput}`
+    if (searchInput === "") {
+      searchUrl = "http://localhost:8080/https://restcountries.eu/rest/v2/all"
+    }
     fetch(searchUrl)
       .then(response => {
         return response.json();
