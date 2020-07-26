@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Row, Col, Switch } from 'antd'
+import { Row, Col, Switch, Input } from 'antd'
 import CountryCard from './components/countrycard/countrycard'
 import 'antd/dist/antd.css';
 
 const style = { background: '#0092ff', padding: '8px 0' };
 const divstyle = {padding: '8px'}
+const { Search } = Input;
 
 export default class App extends React.Component {
   constructor(props){
@@ -17,8 +18,8 @@ export default class App extends React.Component {
       text: "text",
       visible: false,
       bgcolor: 'grey',
+      searchValue: "",
     }
-    this.test = "go"
   }
   
   componentDidMount() {
@@ -46,12 +47,6 @@ export default class App extends React.Component {
       })
     }
     )
-    this.cole()
-  }
-
-  cole(){
-    //console.log(this.state.text)
-    console.log(this.test)
   }
 
   showModal = () => {
@@ -73,7 +68,6 @@ export default class App extends React.Component {
   }
 
   oneRow(countries, rowNumber){
-    let source = `https://www.countryflags.io/be/flat/64.png`
     let row = countries.map((element, index)=> {
       return  <Col span={6} style={{ padding: '20px'}}  key={index}>
         {element !== null ? (
@@ -81,7 +75,7 @@ export default class App extends React.Component {
           <CountryCard 
             title={"Click to get more details"} name={element.name} capital={element.capital} currencies={element.currencies.map(currency => <div>{currency.name}</div>)} 
             populationCount={element.population} isoCode={element.alpha3Code} languages={element.languages.map(language => <div>{language.name}</div>)}  
-            imgURL={`https://www.countryflags.io/${element.alpha2Code}/flat/64.png`} />) : null}
+            imgURL={`https://www.countryflags.io/${element.alpha2Code}/shiny/64.png`} />) : null}
          
           </Col>
           
@@ -94,6 +88,22 @@ export default class App extends React.Component {
       </Row>
     </div>
     }
+  handleOnChange = event => {
+    this.setState({ searchValue: event.target.value })
+  }
+  handleSearch = () => {
+    this.makeApiCall(this.state.searchValue);
+  }
+  makeApiCall = (searchInput) => {
+    let searchUrl = `http://localhost:8080/https://restcountries.eu/rest/v2/name/${searchInput}`
+    fetch(searchUrl)
+      .then(response => {
+        return response.json();
+      })
+      .then(results => {
+        this.setState({items: results});
+      });
+  }
 
   render (){
     let allRows = []
@@ -111,11 +121,21 @@ export default class App extends React.Component {
       }
       rowNumber++;
       allRows.push(this.oneRow(countriesPerRow,rowNumber))
+
     }
     return (
       <div style={{ backgroundColor: this.state.bgcolor}}>
         <p>Click toggle below activate day/night mode</p>
-        <Switch checkedChildren="Night Mode" unCheckedChildren="Day Mode" onChange={this.setColor} defaultChecked> </Switch>
+        <Switch checkedChildren="Night Mode" unCheckedChildren="Day Mode" onChange={this.setColor} defaultChecked> </Switch> 
+        <br/>
+        <Search
+            placeholder="input country name"
+            onSearch={this.handleSearch}
+            onChange ={event => this.handleOnChange(event)}
+            style={{ padding: 20 }}
+            size = "large"
+            enterButton="Search"
+          />
         {allRows}
       </div>
     )
